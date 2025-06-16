@@ -91,6 +91,46 @@ const Index = () => {
 
         {/* Main Content */}
         <div className="space-y-6">
+          {/* Summary Section - Always visible */}
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Resumen del turno</h3>
+            {!selectedDate && !selectedTime ? (
+              <div className="text-gray-500 text-center py-4">
+                Selecciona fecha y horario para ver el resumen
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {selectedDate ? (
+                  <div className="flex items-center text-gray-700">
+                    <CalendarDays className="w-4 h-4 mr-2 text-blue-600" />
+                    <span>{selectedDate.toLocaleDateString('es-ES', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center text-gray-400">
+                    <CalendarDays className="w-4 h-4 mr-2" />
+                    <span>Fecha no seleccionada</span>
+                  </div>
+                )}
+                {selectedTime ? (
+                  <div className="flex items-center text-gray-700">
+                    <Clock className="w-4 h-4 mr-2 text-blue-600" />
+                    <span>{selectedTime}</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center text-gray-400">
+                    <Clock className="w-4 h-4 mr-2" />
+                    <span>Horario no seleccionado</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
           {/* Calendar and Time Selection Section */}
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
@@ -118,32 +158,6 @@ const Index = () => {
               )}
             </div>
           </div>
-
-          {/* Summary Section */}
-          {(selectedDate || selectedTime) && (
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Resumen del turno</h3>
-              <div className="space-y-3">
-                {selectedDate && (
-                  <div className="flex items-center text-gray-700">
-                    <CalendarDays className="w-4 h-4 mr-2 text-blue-600" />
-                    <span>{selectedDate.toLocaleDateString('es-ES', { 
-                      weekday: 'long', 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}</span>
-                  </div>
-                )}
-                {selectedTime && (
-                  <div className="flex items-center text-gray-700">
-                    <Clock className="w-4 h-4 mr-2 text-blue-600" />
-                    <span>{selectedTime}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
 
           {/* Form Section */}
           {selectedDate && selectedTime && (
