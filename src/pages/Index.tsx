@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import { Calendar } from '../components/Calendar';
 import { TimeSlots } from '../components/TimeSlots';
 import { AppointmentForm } from '../components/AppointmentForm';
 import { ConfirmationModal } from '../components/ConfirmationModal';
 import { CalendarDays, Clock, User, Phone, Mail } from 'lucide-react';
+import { toast } from 'sonner';
 
 const Index = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -15,6 +17,7 @@ const Index = () => {
   });
   const [currentStep, setCurrentStep] = useState(1);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
@@ -32,19 +35,72 @@ const Index = () => {
     setShowConfirmation(true);
   };
 
-  const handleConfirmAppointment = () => {
-    console.log('Turno confirmado:', {
-      date: selectedDate,
-      time: selectedTime,
-      ...formData
-    });
-    
-    // Aquí se integrará con Google Sheets y n8n
-    setShowConfirmation(false);
-    setCurrentStep(1);
-    setSelectedDate(null);
-    setSelectedTime(null);
-    setFormData({ name: '', phone: '', email: '' });
+  const handleConfirmAppointment = async () => {
+    // Validar que todos los campos requeridos estén completos
+    if (!formData.name.trim() || !formData.phone.trim() || !formData.email.trim() || !selectedDate || !selectedTime) {
+      alert('Por favor completa todos los campos requeridos: nombre, teléfono, email, fecha y hora.');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Formatear la fecha para enviar
+      const fechaFormateada = selectedDate.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+
+      // Preparar los datos para enviar
+      const dataToSend = {
+        nombre: formData.name,
+        telefono: formData.phone,
+        email: formData.email,
+        fecha: fechaFormateada,
+        hora: selectedTime,
+        servicio: 'Consulta general', // Valor por defecto
+        observaciones: '' // Valor por defecto
+      };
+
+      console.log('Enviando datos a Google Apps Script:', dataToSend);
+
+      // Hacer el POST request a la API de Google Apps Script
+      const response = await fetch('https://script.google.com/macros/s/AKfycbwvdGku9fKwC3QwcXR1WeGkblhzltbOj1Mvnlg5srFNnTO5dINOG3p1uoqFaKOXV4edcQ/exec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend)
+      });
+
+      if (response.ok) {
+        // Mostrar mensaje de éxito
+        toast.success('¡Turno confirmado exitosamente!', {
+          description: 'Recibirás un email de confirmación en breve.',
+          duration: 5000,
+        });
+
+        console.log('Turno confirmado exitosamente:', dataToSend);
+        
+        // Resetear el formulario
+        setShowConfirmation(false);
+        setCurrentStep(1);
+        setSelectedDate(null);
+        setSelectedTime(null);
+        setFormData({ name: '', phone: '', email: '' });
+      } else {
+        throw new Error('Error en la respuesta del servidor');
+      }
+    } catch (error) {
+      console.error('Error al enviar el turno:', error);
+      toast.error('Error al confirmar el turno', {
+        description: 'Por favor intenta nuevamente o contacta al soporte.',
+        duration: 5000,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -174,6 +230,7 @@ const Index = () => {
         isOpen={showConfirmation}
         onClose={() => setShowConfirmation(false)}
         onConfirm={handleConfirmAppointment}
+        isSubmitting={isSubmitting}
         appointmentData={{
           date: selectedDate,
           time: selectedTime,

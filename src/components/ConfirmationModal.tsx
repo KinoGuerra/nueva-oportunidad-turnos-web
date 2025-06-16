@@ -15,13 +15,15 @@ interface ConfirmationModalProps {
   onClose: () => void;
   onConfirm: () => void;
   appointmentData: AppointmentData;
+  isSubmitting?: boolean;
 }
 
 export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
-  appointmentData
+  appointmentData,
+  isSubmitting = false
 }) => {
   if (!isOpen) return null;
 
@@ -38,7 +40,8 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            disabled={isSubmitting}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
           >
             <X className="w-5 h-5 text-gray-500" />
           </button>
@@ -110,15 +113,30 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         <div className="flex flex-col sm:flex-row gap-3 p-6 border-t border-gray-100">
           <button
             onClick={onClose}
-            className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
+            disabled={isSubmitting}
+            className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-all duration-200 hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]"
+            disabled={isSubmitting}
+            className={`
+              flex-1 px-6 py-3 rounded-xl font-medium transition-all duration-200
+              ${isSubmitting
+                ? 'bg-gray-400 text-white cursor-not-allowed'
+                : 'bg-green-600 text-white hover:bg-green-700 hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]'
+              }
+            `}
           >
-            Confirmar turno
+            {isSubmitting ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Enviando...
+              </div>
+            ) : (
+              'Confirmar turno'
+            )}
           </button>
         </div>
       </div>
