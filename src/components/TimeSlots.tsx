@@ -3,7 +3,7 @@ import React from 'react';
 import { Clock } from 'lucide-react';
 
 interface TimeSlotsProps {
-  selectedDate: Date;
+  selectedDate: Date | null;
   onTimeSelect: (time: string) => void;
   selectedTime: string | null;
 }
@@ -37,57 +37,71 @@ export const TimeSlots: React.FC<TimeSlotsProps> = ({ selectedDate, onTimeSelect
     return unavailable;
   };
 
-  const unavailableSlots = getUnavailableSlots(selectedDate);
-  const isWeekend = selectedDate.getDay() === 0 || selectedDate.getDay() === 6;
+  // Si no hay fecha seleccionada, mostrar todos los horarios pero deshabilitados
+  let availableSlots = timeSlots;
+  let unavailableSlots: string[] = [];
+  let isWeekend = false;
 
-  const availableSlots = isWeekend 
-    ? unavailableSlots 
-    : timeSlots.filter(slot => !unavailableSlots.includes(slot));
+  if (selectedDate) {
+    unavailableSlots = getUnavailableSlots(selectedDate);
+    isWeekend = selectedDate.getDay() === 0 || selectedDate.getDay() === 6;
+    
+    availableSlots = isWeekend 
+      ? unavailableSlots 
+      : timeSlots.filter(slot => !unavailableSlots.includes(slot));
+  }
 
   return (
     <div className="space-y-4">
       <div className="flex items-center text-sm text-gray-600 mb-4">
         <Clock className="w-4 h-4 mr-2" />
         <span>
-          {selectedDate.toLocaleDateString('es-ES', { 
-            weekday: 'long', 
-            day: 'numeric', 
-            month: 'long' 
-          })}
+          {selectedDate 
+            ? selectedDate.toLocaleDateString('es-ES', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long' 
+              })
+            : 'Selecciona una fecha para ver horarios disponibles'
+          }
         </span>
       </div>
 
-      {availableSlots.length === 0 ? (
-        <div className="text-center py-8">
-          <div className="text-gray-500 mb-2">No hay horarios disponibles</div>
-          <div className="text-sm text-gray-400">Selecciona otra fecha</div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {availableSlots.map((time) => (
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {timeSlots.map((time) => {
+          const isAvailable = selectedDate && availableSlots.includes(time);
+          const isSelected = selectedTime === time;
+          
+          return (
             <button
               key={time}
-              onClick={() => onTimeSelect(time)}
+              onClick={() => isAvailable && onTimeSelect(time)}
+              disabled={!selectedDate || !isAvailable}
               className={`
                 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
                 border-2 hover:scale-105 active:scale-95
-                ${selectedTime === time
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-lg'
-                  : 'bg-white text-gray-700 border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                ${!selectedDate 
+                  ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                  : isSelected
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-lg'
+                    : isAvailable
+                      ? 'bg-white text-gray-700 border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                      : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
                 }
               `}
             >
               {time}
             </button>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
 
-      {availableSlots.length > 0 && (
-        <div className="text-xs text-gray-500 text-center mt-4">
-          {availableSlots.length} horarios disponibles
-        </div>
-      )}
+      <div className="text-xs text-gray-500 text-center mt-4">
+        {!selectedDate 
+          ? 'Selecciona una fecha para habilitar los horarios'
+          : `${availableSlots.length} horarios disponibles`
+        }
+      </div>
     </div>
   );
 };

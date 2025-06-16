@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar } from '../components/Calendar';
 import { TimeSlots } from '../components/TimeSlots';
@@ -145,17 +144,15 @@ const Index = () => {
                 <Calendar onDateSelect={handleDateSelect} selectedDate={selectedDate} />
               </div>
 
-              {/* Time Slots */}
-              {selectedDate && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-700 mb-4">Horarios disponibles</h3>
-                  <TimeSlots 
-                    selectedDate={selectedDate} 
-                    onTimeSelect={handleTimeSelect}
-                    selectedTime={selectedTime}
-                  />
-                </div>
-              )}
+              {/* Time Slots - Always visible */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-700 mb-4">Horarios disponibles</h3>
+                <TimeSlots 
+                  selectedDate={selectedDate} 
+                  onTimeSelect={handleTimeSelect}
+                  selectedTime={selectedTime}
+                />
+              </div>
             </div>
           </div>
 
