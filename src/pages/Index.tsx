@@ -90,73 +90,71 @@ const Index = () => {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Column - Calendar and Time Selection */}
-          <div className="space-y-6">
-            {/* Calendar Section */}
+        <div className="space-y-6">
+          {/* Calendar and Time Selection Section */}
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+              <CalendarDays className="w-5 h-5 mr-2 text-blue-600" />
+              Selecciona fecha y horario
+            </h2>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Calendar */}
+              <div>
+                <h3 className="text-lg font-medium text-gray-700 mb-4">Fecha disponible</h3>
+                <Calendar onDateSelect={handleDateSelect} selectedDate={selectedDate} />
+              </div>
+
+              {/* Time Slots */}
+              {selectedDate && (
+                <div>
+                  <h3 className="text-lg font-medium text-gray-700 mb-4">Horarios disponibles</h3>
+                  <TimeSlots 
+                    selectedDate={selectedDate} 
+                    onTimeSelect={handleTimeSelect}
+                    selectedTime={selectedTime}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Summary Section */}
+          {(selectedDate || selectedTime) && (
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Resumen del turno</h3>
+              <div className="space-y-3">
+                {selectedDate && (
+                  <div className="flex items-center text-gray-700">
+                    <CalendarDays className="w-4 h-4 mr-2 text-blue-600" />
+                    <span>{selectedDate.toLocaleDateString('es-ES', { 
+                      weekday: 'long', 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}</span>
+                  </div>
+                )}
+                {selectedTime && (
+                  <div className="flex items-center text-gray-700">
+                    <Clock className="w-4 h-4 mr-2 text-blue-600" />
+                    <span>{selectedTime}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Form Section */}
+          {selectedDate && selectedTime && (
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <CalendarDays className="w-5 h-5 mr-2 text-blue-600" />
-                Selecciona una fecha
+                <User className="w-5 h-5 mr-2 text-blue-600" />
+                Tus datos
               </h2>
-              <Calendar onDateSelect={handleDateSelect} selectedDate={selectedDate} />
+              <AppointmentForm onSubmit={handleFormSubmit} />
             </div>
-
-            {/* Time Slots Section */}
-            {selectedDate && (
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                  <Clock className="w-5 h-5 mr-2 text-blue-600" />
-                  Horarios disponibles
-                </h2>
-                <TimeSlots 
-                  selectedDate={selectedDate} 
-                  onTimeSelect={handleTimeSelect}
-                  selectedTime={selectedTime}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Right Column - Form and Summary */}
-          <div className="space-y-6">
-            {/* Summary */}
-            {(selectedDate || selectedTime) && (
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Resumen del turno</h3>
-                <div className="space-y-3">
-                  {selectedDate && (
-                    <div className="flex items-center text-gray-700">
-                      <CalendarDays className="w-4 h-4 mr-2 text-blue-600" />
-                      <span>{selectedDate.toLocaleDateString('es-ES', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                      })}</span>
-                    </div>
-                  )}
-                  {selectedTime && (
-                    <div className="flex items-center text-gray-700">
-                      <Clock className="w-4 h-4 mr-2 text-blue-600" />
-                      <span>{selectedTime}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Form */}
-            {selectedDate && selectedTime && (
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                  <User className="w-5 h-5 mr-2 text-blue-600" />
-                  Tus datos
-                </h2>
-                <AppointmentForm onSubmit={handleFormSubmit} />
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
