@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar } from '../components/Calendar';
 import { TimeSlots } from '../components/TimeSlots';
@@ -52,15 +51,15 @@ const Index = () => {
         day: '2-digit'
       });
 
-      // Preparar los datos para enviar
+      // Preparar los datos para enviar con valores fijos para servicio y observaciones
       const dataToSend = {
         nombre: formData.name,
         telefono: formData.phone,
         email: formData.email,
         fecha: fechaFormateada,
         hora: selectedTime,
-        servicio: 'Consulta general', // Valor por defecto
-        observaciones: '' // Valor por defecto
+        servicio: 'Predeterminado',
+        observaciones: 'Predeterminado'
       };
 
       console.log('Enviando datos a Google Apps Script:', dataToSend);
