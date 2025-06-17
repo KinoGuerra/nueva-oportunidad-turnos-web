@@ -37,7 +37,7 @@ export const useBookedAppointments = (selectedDate: Date | null) => {
           mode: 'cors'
         });
 
-        if (response.okay) {
+        if (response.ok) {
           const data = await response.json();
           console.log('Turnos recibidos de la API:', data);
           
