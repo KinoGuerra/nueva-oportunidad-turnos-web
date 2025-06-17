@@ -29,7 +29,7 @@ const Index = () => {
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
-              Turnos Nueva Oportunidad
+              Gestión de Turnos - Centro de belleza
             </h1>
             <p className="text-gray-600 text-lg">
               Reserva tu turno de forma fácil y rápida
