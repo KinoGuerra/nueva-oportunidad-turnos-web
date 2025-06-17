@@ -31,25 +31,27 @@ export const useBookedAppointments = (selectedDate: Date | null) => {
 
         console.log('Consultando turnos para la fecha:', fechaFormateada);
 
-        // Cambiar a no-cors para evitar problemas de CORS con Google Apps Script
+        // Hacer GET request para obtener los turnos de la fecha seleccionada
         const response = await fetch(`https://script.google.com/macros/s/AKfycbwvdGku9fKwC3QwcXR1WeGkblhzltbOj1Mvnlg5srFNnTO5dINOG3p1uoqFaKOXV4edcQ/exec?fecha=${encodeURIComponent(fechaFormateada)}`, {
           method: 'GET',
-          mode: 'no-cors'
+          mode: 'cors'
         });
 
-        console.log('Respuesta de la API recibida');
-        
-        // Con no-cors no podemos leer la respuesta, así que asumimos que funcionó
-        // En un escenario real, esto requeriría configurar CORS en el servidor
-        // Por ahora, simulamos algunos turnos ocupados para testing
-        const mockBookedSlots = ['10:00', '14:30', '16:00'];
-        setBookedSlots(mockBookedSlots);
-        console.log('Horarios ocupados (simulados):', mockBookedSlots);
-
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Turnos recibidos de la API:', data);
+          
+          // Extraer las horas ocupadas
+          const ocupiedTimes = data.map((appointment: BookedAppointment) => appointment.hora);
+          setBookedSlots(ocupiedTimes);
+          console.log('Horarios ocupados:', ocupiedTimes);
+        } else {
+          console.warn('No se pudieron obtener los turnos reservados');
+          setBookedSlots([]);
+        }
       } catch (error) {
         console.error('Error al consultar turnos:', error);
-        // En caso de error, continuamos sin turnos ocupados
-        setError(null); // No mostramos error al usuario para no interrumpir la experiencia
+        setError('Error al consultar disponibilidad');
         setBookedSlots([]);
       } finally {
         setIsLoading(false);
