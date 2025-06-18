@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ContactMenu } from '../components/ContactMenu';
@@ -121,9 +122,9 @@ const Turnos = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between mb-4">
+      <header className="bg-white shadow-sm border-b border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Sparkles className="w-8 h-8 text-blue-600" />
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
@@ -138,33 +139,42 @@ const Turnos = () => {
               <Link to="/servicios" className="text-gray-700 hover:text-blue-600 transition-colors">
                 Servicios
               </Link>
+              <Link to="/turnos" className="text-blue-600 font-medium">
+                Turnos
+              </Link>
+              <Link to="/consultar-turno" className="text-gray-700 hover:text-blue-600 transition-colors">
+                Consultar Turno
+              </Link>
               <ContactMenu />
             </nav>
           </div>
-          
-          <div className="flex items-center">
-            <Link 
-              to="/" 
-              className="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors mr-4"
-            >
-              <ArrowLeft className="w-5 h-5 mr-1" />
-              Volver al inicio
-            </Link>
-          </div>
-          
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
-              Turnos Nueva Oportunidad
-            </h2>
-            <p className="text-gray-600 text-lg">
-              Reserva tu turno de forma fácil y rápida
-            </p>
-          </div>
         </div>
+      </header>
+
+      {/* Breadcrumb */}
+      <div className="max-w-6xl mx-auto px-4 py-4">
+        <Link 
+          to="/" 
+          className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Volver al inicio
+        </Link>
       </div>
 
-      {/* Progress Indicator */}
-      <div className="max-w-4xl mx-auto px-4 py-6">
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+            Agenda tu <span className="text-blue-600">Turno</span>
+          </h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Reserva tu turno de forma fácil y rápida
+          </p>
+        </div>
+
+        {/* Progress Indicator */}
         <div className="flex items-center justify-center space-x-4 mb-8">
           <div className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${
             currentStep >= 1 ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'

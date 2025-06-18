@@ -32,11 +32,44 @@ const ConsultarTurno = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
+  const parseDate = (dateStr: string) => {
+    const [day, month, year] = dateStr.split('/');
+    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+  };
+
   const isDatePast = (dateStr: string) => {
-    const appointmentDate = new Date(dateStr.split('/').reverse().join('-'));
+    const appointmentDate = parseDate(dateStr);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return appointmentDate < today;
+  };
+
+  const sortAppointmentsByDate = (appointments: Appointment[]) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const upcoming = appointments.filter(apt => !isDatePast(apt.fecha));
+    const past = appointments.filter(apt => isDatePast(apt.fecha));
+    
+    // Ordenar próximos por fecha (más cercanos primero)
+    upcoming.sort((a, b) => parseDate(a.fecha).getTime() - parseDate(b.fecha).getTime());
+    
+    // Ordenar pasados por fecha (más recientes primero)
+    past.sort((a, b) => parseDate(b.fecha).getTime() - parseDate(a.fecha).getTime());
+    
+    return [...upcoming, ...past];
+  };
+
+  const getClosestAppointment = (appointments: Appointment[]) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const upcoming = appointments.filter(apt => !isDatePast(apt.fecha));
+    if (upcoming.length === 0) return null;
+    
+    // Ordenar por fecha y devolver el más cercano
+    upcoming.sort((a, b) => parseDate(a.fecha).getTime() - parseDate(b.fecha).getTime());
+    return upcoming[0];
   };
 
   const handleSearch = async () => {
@@ -57,7 +90,6 @@ const ConsultarTurno = () => {
       });
 
       // Como usamos no-cors, simulamos datos para demostración
-      // En producción, la API debería devolver los turnos filtrados por email
       const mockAppointments: Appointment[] = [
         {
           fecha: '15/06/2025',
@@ -79,16 +111,24 @@ const ConsultarTurno = () => {
           nombre: 'María García',
           email: email,
           servicio: 'Manicura'
+        },
+        {
+          fecha: '25/06/2025',
+          hora: '11:00',
+          nombre: 'María García',
+          email: email,
+          servicio: 'Corte de Cabello'
         }
       ];
 
-      setAppointments(mockAppointments);
+      const sortedAppointments = sortAppointmentsByDate(mockAppointments);
+      setAppointments(sortedAppointments);
       setHasSearched(true);
       
-      if (mockAppointments.length === 0) {
+      if (sortedAppointments.length === 0) {
         toast.info('No se encontraron turnos para este correo electrónico');
       } else {
-        toast.success(`Se encontraron ${mockAppointments.length} turnos`);
+        toast.success(`Se encontraron ${sortedAppointments.length} turnos`);
       }
 
     } catch (error) {
@@ -98,6 +138,8 @@ const ConsultarTurno = () => {
       setIsLoading(false);
     }
   };
+
+  const closestAppointment = getClosestAppointment(appointments);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -118,6 +160,12 @@ const ConsultarTurno = () => {
               </Link>
               <Link to="/servicios" className="text-gray-700 hover:text-blue-600 transition-colors">
                 Servicios
+              </Link>
+              <Link to="/turnos" className="text-gray-700 hover:text-blue-600 transition-colors">
+                Turnos
+              </Link>
+              <Link to="/consultar-turno" className="text-blue-600 font-medium">
+                Consultar Turno
               </Link>
               <ContactMenu />
             </nav>
@@ -222,15 +270,31 @@ const ConsultarTurno = () => {
                     <TableBody>
                       {appointments.map((appointment, index) => {
                         const isPast = isDatePast(appointment.fecha);
+                        const isClosest = closestAppointment && 
+                          appointment.fecha === closestAppointment.fecha && 
+                          appointment.hora === closestAppointment.hora &&
+                          !isPast;
+                        
                         return (
                           <TableRow 
                             key={index} 
-                            className={isPast ? 'opacity-50 bg-gray-50' : ''}
+                            className={`${
+                              isPast 
+                                ? 'opacity-50 bg-gray-50' 
+                                : isClosest 
+                                  ? 'bg-blue-50 border-l-4 border-blue-400 shadow-sm' 
+                                  : ''
+                            }`}
                           >
                             <TableCell className="font-medium">
                               <div className="flex items-center">
                                 <Calendar className="w-4 h-4 mr-2 text-gray-500" />
                                 {appointment.fecha}
+                                {isClosest && (
+                                  <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                                    Próximo
+                                  </span>
+                                )}
                               </div>
                             </TableCell>
                             <TableCell>
@@ -260,6 +324,7 @@ const ConsultarTurno = () => {
                 <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                   <p className="text-sm text-blue-700">
                     <strong>Nota:</strong> Los turnos en gris son de fechas pasadas. 
+                    El turno resaltado en azul es tu próxima cita.
                     Si necesitas reprogramar o cancelar un turno futuro, contáctanos.
                   </p>
                 </div>
