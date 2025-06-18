@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ContactMenu } from '../components/ContactMenu';
@@ -88,7 +87,7 @@ const Turnos = () => {
         duration: 5000,
       });
 
-      console.log('Turno enviado exitosamente:', data);
+      console.log('Turno enviado exitosamente:', dataToSend);
       
       // Resetear el formulario
       setShowConfirmation(false);
