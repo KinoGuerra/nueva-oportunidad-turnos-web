@@ -70,23 +70,23 @@ const Servicios = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Sparkles className="w-8 h-8 text-pink-600" />
+              <Sparkles className="w-8 h-8 text-blue-600" />
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
                 Centro de Belleza
               </h1>
             </div>
             
             <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-pink-600 transition-colors">
+              <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">
                 Inicio
               </Link>
-              <Link to="/servicios" className="text-pink-600 font-semibold">
+              <Link to="/servicios" className="text-blue-600 font-semibold">
                 Servicios
               </Link>
               <ContactMenu />
@@ -99,7 +99,7 @@ const Servicios = () => {
       <div className="max-w-6xl mx-auto px-4 py-4">
         <Link 
           to="/" 
-          className="inline-flex items-center text-gray-600 hover:text-pink-600 transition-colors"
+          className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver al inicio
@@ -110,7 +110,7 @@ const Servicios = () => {
       <section className="py-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-            Nuestros <span className="text-pink-600">Servicios</span>
+            Nuestros <span className="text-blue-600">Servicios</span>
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             Descubre nuestra amplia gama de tratamientos de belleza diseñados para realzar tu belleza natural y hacerte sentir radiante
@@ -127,8 +127,8 @@ const Servicios = () => {
               return (
                 <Card key={servicio.id} className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                   <CardHeader className="text-center pb-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-pink-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                      <IconComponent className="w-8 h-8 text-pink-600" />
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                      <IconComponent className="w-8 h-8 text-blue-600" />
                     </div>
                     <CardTitle className="text-xl font-bold text-gray-800 mb-2">
                       {servicio.title}
@@ -149,7 +149,7 @@ const Servicios = () => {
                       <ul className="text-sm text-gray-600 space-y-1">
                         {servicio.features.map((feature, index) => (
                           <li key={index} className="flex items-center">
-                            <Heart className="w-3 h-3 text-pink-500 mr-2 flex-shrink-0" />
+                            <Heart className="w-3 h-3 text-blue-500 mr-2 flex-shrink-0" />
                             {feature}
                           </li>
                         ))}
@@ -158,7 +158,7 @@ const Servicios = () => {
                     
                     <div className="border-t pt-4">
                       <Link to="/turnos" className="block w-full">
-                        <Button className="w-full bg-pink-600 hover:bg-pink-700 text-white">
+                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                           <Calendar className="w-4 h-4 mr-2" />
                           Reservar Turno
                         </Button>
@@ -183,7 +183,7 @@ const Servicios = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/turnos">
-              <Button size="lg" className="bg-pink-600 hover:bg-pink-700 text-white">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
                 <Calendar className="w-5 h-5 mr-2" />
                 Agendar Consulta
               </Button>
@@ -197,7 +197,7 @@ const Servicios = () => {
       <footer className="bg-gray-800 text-white py-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Sparkles className="w-6 h-6 text-pink-400" />
+            <Sparkles className="w-6 h-6 text-blue-400" />
             <h3 className="text-xl font-semibold">Centro de Belleza</h3>
           </div>
           <p className="text-gray-400 mb-8">
@@ -206,7 +206,7 @@ const Servicios = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/turnos"
-              className="inline-flex items-center px-6 py-3 bg-pink-600 text-white rounded-full font-semibold hover:bg-pink-700 transition-colors"
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors"
             >
               <Calendar className="w-4 h-4 mr-2" />
               Reservar Turno

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ContactMenu } from '../components/ContactMenu';
@@ -7,23 +8,23 @@ import { Calendar, Search, Sparkles } from 'lucide-react';
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Sparkles className="w-8 h-8 text-pink-600" />
+              <Sparkles className="w-8 h-8 text-blue-600" />
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
                 Centro de Belleza
               </h1>
             </div>
             
             <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-pink-600 transition-colors">
+              <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">
                 Inicio
               </Link>
-              <Link to="/servicios" className="text-gray-700 hover:text-pink-600 transition-colors">
+              <Link to="/servicios" className="text-gray-700 hover:text-blue-600 transition-colors">
                 Servicios
               </Link>
               <ContactMenu />
@@ -37,7 +38,7 @@ const Home = () => {
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
             Tu belleza es nuestra
-            <span className="text-pink-600"> pasión</span>
+            <span className="text-blue-600"> pasión</span>
           </h2>
           <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
             Descubre una experiencia única de relajación y belleza en nuestro centro especializado
@@ -47,7 +48,7 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link
               to="/turnos"
-              className="inline-flex items-center px-8 py-4 bg-pink-600 text-white rounded-full text-lg font-semibold hover:bg-pink-700 transition-colors shadow-lg hover:shadow-xl"
+              className="inline-flex items-center px-8 py-4 bg-blue-600 text-white rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
             >
               <Calendar className="w-5 h-5 mr-2" />
               Agendar Turno
@@ -55,7 +56,7 @@ const Home = () => {
             
             <Link
               to="/consultar-turno"
-              className="inline-flex items-center px-8 py-4 bg-white text-pink-600 border-2 border-pink-600 rounded-full text-lg font-semibold hover:bg-pink-50 transition-colors shadow-lg hover:shadow-xl"
+              className="inline-flex items-center px-8 py-4 bg-white text-blue-600 border-2 border-blue-600 rounded-full text-lg font-semibold hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl"
             >
               <Search className="w-5 h-5 mr-2" />
               Consultar mi turno
@@ -85,8 +86,8 @@ const Home = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="w-8 h-8 text-pink-600" />
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-8 h-8 text-blue-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Tratamientos Faciales</h3>
               <p className="text-gray-600">Rejuvenece tu piel con nuestros tratamientos especializados</p>
@@ -122,7 +123,7 @@ const Home = () => {
       <footer className="bg-gray-800 text-white py-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Sparkles className="w-6 h-6 text-pink-400" />
+            <Sparkles className="w-6 h-6 text-blue-400" />
             <h3 className="text-xl font-semibold">Centro de Belleza</h3>
           </div>
           <p className="text-gray-400 mb-8">
@@ -131,7 +132,7 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/turnos"
-              className="inline-flex items-center px-6 py-3 bg-pink-600 text-white rounded-full font-semibold hover:bg-pink-700 transition-colors"
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-colors"
             >
               <Calendar className="w-4 h-4 mr-2" />
               Reservar Turno

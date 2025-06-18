@@ -100,23 +100,23 @@ const ConsultarTurno = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Sparkles className="w-8 h-8 text-pink-600" />
+              <Sparkles className="w-8 h-8 text-blue-600" />
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
                 Centro de Belleza
               </h1>
             </div>
             
             <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-pink-600 transition-colors">
+              <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">
                 Inicio
               </Link>
-              <Link to="/servicios" className="text-gray-700 hover:text-pink-600 transition-colors">
+              <Link to="/servicios" className="text-gray-700 hover:text-blue-600 transition-colors">
                 Servicios
               </Link>
               <ContactMenu />
@@ -129,7 +129,7 @@ const ConsultarTurno = () => {
       <div className="max-w-6xl mx-auto px-4 py-4">
         <Link 
           to="/" 
-          className="inline-flex items-center text-gray-600 hover:text-pink-600 transition-colors"
+          className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver al inicio
@@ -141,7 +141,7 @@ const ConsultarTurno = () => {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-            Consultar mis <span className="text-pink-600">Turnos</span>
+            Consultar mis <span className="text-blue-600">Turnos</span>
           </h2>
           <p className="text-xl text-gray-600 mb-8">
             Ingresa tu correo electrónico para ver todos tus turnos agendados
@@ -152,7 +152,7 @@ const ConsultarTurno = () => {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Mail className="w-5 h-5 mr-2 text-pink-600" />
+              <Mail className="w-5 h-5 mr-2 text-blue-600" />
               Buscar mis turnos
             </CardTitle>
             <CardDescription>
@@ -174,7 +174,7 @@ const ConsultarTurno = () => {
               <Button 
                 onClick={handleSearch}
                 disabled={isLoading}
-                className="bg-pink-600 hover:bg-pink-700 text-white"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
               >
                 {isLoading ? (
                   <>
@@ -197,7 +197,7 @@ const ConsultarTurno = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Calendar className="w-5 h-5 mr-2 text-pink-600" />
+                <Calendar className="w-5 h-5 mr-2 text-blue-600" />
                 Mis turnos agendados
               </CardTitle>
               <CardDescription>
@@ -284,7 +284,7 @@ const ConsultarTurno = () => {
                 </Button>
               </Link>
               <Link to="/turnos">
-                <Button size="lg" className="bg-pink-600 hover:bg-pink-700 text-white">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
                   <Calendar className="w-5 h-5 mr-2" />
                   Agendar Turno
                 </Button>

@@ -1,10 +1,12 @@
+
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ContactMenu } from '../components/ContactMenu';
 import { Calendar } from '../components/Calendar';
 import { TimeSlots } from '../components/TimeSlots';
 import { AppointmentForm } from '../components/AppointmentForm';
 import { ConfirmationModal } from '../components/ConfirmationModal';
-import { CalendarDays, Clock, User, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { CalendarDays, Clock, User, ArrowLeft, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 
 const Turnos = () => {
@@ -86,7 +88,7 @@ const Turnos = () => {
         duration: 5000,
       });
 
-      console.log('Turno enviado exitosamente:', dataToSend);
+      console.log('Turno enviado exitosamente:', data);
       
       // Resetear el formulario
       setShowConfirmation(false);
@@ -122,7 +124,26 @@ const Turnos = () => {
       {/* Header */}
       <div className="bg-white shadow-sm border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="flex items-center mb-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-2">
+              <Sparkles className="w-8 h-8 text-blue-600" />
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+                Centro de Belleza
+              </h1>
+            </div>
+            
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">
+                Inicio
+              </Link>
+              <Link to="/servicios" className="text-gray-700 hover:text-blue-600 transition-colors">
+                Servicios
+              </Link>
+              <ContactMenu />
+            </nav>
+          </div>
+          
+          <div className="flex items-center">
             <Link 
               to="/" 
               className="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors mr-4"
@@ -131,10 +152,11 @@ const Turnos = () => {
               Volver al inicio
             </Link>
           </div>
+          
           <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
               Turnos Nueva Oportunidad
-            </h1>
+            </h2>
             <p className="text-gray-600 text-lg">
               Reserva tu turno de forma fácil y rápida
             </p>
