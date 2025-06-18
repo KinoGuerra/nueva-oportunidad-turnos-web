@@ -24,7 +24,6 @@ const Servicios = () => {
       title: "Maquillaje Profesional",
       description: "Maquillaje profesional para toda ocasión, desde looks naturales hasta dramáticos para eventos especiales.",
       icon: Palette,
-      price: "Desde $8.000",
       duration: "60-90 min",
       features: ["Maquillaje de día", "Maquillaje de noche", "Maquillaje para fotografía", "Asesoramiento personalizado"]
     },
@@ -33,7 +32,6 @@ const Servicios = () => {
       title: "Servicio para Eventos",
       description: "Servicio completo de belleza para bodas, fiestas y eventos especiales. Incluye maquillaje y peinado.",
       icon: Star,
-      price: "Desde $15.000",
       duration: "2-3 horas",
       features: ["Maquillaje + Peinado", "Prueba previa", "Servicio a domicilio", "Retoque incluido"]
     },
@@ -42,7 +40,6 @@ const Servicios = () => {
       title: "Tratamientos Faciales",
       description: "Tratamientos personalizados para rejuvenecer y cuidar tu piel con productos de alta calidad.",
       icon: Droplets,
-      price: "Desde $6.000",
       duration: "75 min",
       features: ["Limpieza profunda", "Hidratación", "Anti-edad", "Tratamiento específico"]
     },
@@ -51,7 +48,6 @@ const Servicios = () => {
       title: "Corte y Peinado",
       description: "Cortes modernos y peinados profesionales adaptados a tu estilo y personalidad.",
       icon: Scissors,
-      price: "Desde $4.500",
       duration: "45-60 min",
       features: ["Corte personalizado", "Peinado", "Asesoramiento de estilo", "Tratamiento capilar"]
     },
@@ -60,7 +56,6 @@ const Servicios = () => {
       title: "Manicura y Pedicura",
       description: "Cuidado completo de manos y pies con técnicas profesionales y productos de calidad.",
       icon: Flower2,
-      price: "Desde $3.500",
       duration: "60 min",
       features: ["Manicura clásica", "Esmaltado semipermanente", "Pedicura spa", "Decoración de uñas"]
     },
@@ -69,7 +64,6 @@ const Servicios = () => {
       title: "Depilación",
       description: "Servicios de depilación con cera de alta calidad para una piel suave y cuidada.",
       icon: Sun,
-      price: "Desde $2.000",
       duration: "30-45 min",
       features: ["Depilación facial", "Depilación corporal", "Cera tibia", "Post-tratamiento incluido"]
     }
@@ -162,11 +156,7 @@ const Servicios = () => {
                       </ul>
                     </div>
                     
-                    <div className="border-t pt-4 space-y-3">
-                      <div className="text-center">
-                        <span className="text-2xl font-bold text-pink-600">{servicio.price}</span>
-                      </div>
-                      
+                    <div className="border-t pt-4">
                       <Link to="/turnos" className="block w-full">
                         <Button className="w-full bg-pink-600 hover:bg-pink-700 text-white">
                           <Calendar className="w-4 h-4 mr-2" />
