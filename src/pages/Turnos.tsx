@@ -83,9 +83,9 @@ const Turnos = () => {
       console.log('Respuesta recibida:', response);
 
       // Con no-cors, no podemos leer el response, así que asumimos éxito si no hay error
-      toast.success('¡Turno enviado exitosamente!', {
-        description: 'Hemos recibido tu solicitud de turno. Te contactaremos pronto para confirmar.',
-        duration: 5000,
+      toast.success('¡Turno registrado exitosamente!', {
+        description: 'Tu turno está en estado PENDIENTE hasta confirmar el depósito de la seña. Te contactaremos con los datos bancarios.',
+        duration: 8000,
       });
 
       console.log('Turno enviado exitosamente:', dataToSend);
@@ -123,11 +123,11 @@ const Turnos = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-4">
+        <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Sparkles className="w-8 h-8 text-blue-600" />
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
+              <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-800">
                 Centro de Belleza
               </h1>
             </div>
@@ -152,10 +152,10 @@ const Turnos = () => {
       </header>
 
       {/* Breadcrumb */}
-      <div className="max-w-6xl mx-auto px-4 py-4">
+      <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4">
         <Link 
           to="/" 
-          className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors"
+          className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Volver al inicio
@@ -163,56 +163,56 @@ const Turnos = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-4 sm:py-8">
         {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4 sm:mb-6">
             Agenda tu <span className="text-blue-600">Turno</span>
           </h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-lg sm:text-xl text-gray-600 mb-4 sm:mb-8 px-2">
             Reserva tu turno de forma fácil y rápida
           </p>
         </div>
 
         {/* Progress Indicator */}
-        <div className="flex items-center justify-center space-x-4 mb-8">
-          <div className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${
+        <div className="flex items-center justify-center space-x-2 sm:space-x-4 mb-6 sm:mb-8 px-2">
+          <div className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1 sm:py-2 rounded-full transition-all text-sm sm:text-base ${
             currentStep >= 1 ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
           }`}>
-            <CalendarDays className="w-5 h-5" />
+            <CalendarDays className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">Fecha</span>
           </div>
-          <div className={`w-8 h-0.5 ${currentStep >= 2 ? 'bg-blue-300' : 'bg-gray-200'}`}></div>
-          <div className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${
+          <div className={`w-4 sm:w-8 h-0.5 ${currentStep >= 2 ? 'bg-blue-300' : 'bg-gray-200'}`}></div>
+          <div className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1 sm:py-2 rounded-full transition-all text-sm sm:text-base ${
             currentStep >= 2 ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
           }`}>
-            <Clock className="w-5 h-5" />
+            <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">Horario</span>
           </div>
-          <div className={`w-8 h-0.5 ${currentStep >= 3 ? 'bg-blue-300' : 'bg-gray-200'}`}></div>
-          <div className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${
+          <div className={`w-4 sm:w-8 h-0.5 ${currentStep >= 3 ? 'bg-blue-300' : 'bg-gray-200'}`}></div>
+          <div className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1 sm:py-2 rounded-full transition-all text-sm sm:text-base ${
             currentStep >= 3 ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
           }`}>
-            <User className="w-5 h-5" />
+            <User className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="hidden sm:inline">Datos</span>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Summary Section - Always visible */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Resumen del turno</h3>
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">Resumen del turno</h3>
             {!selectedDate && !selectedTime ? (
-              <div className="text-gray-500 text-center py-4">
+              <div className="text-gray-500 text-center py-4 text-sm sm:text-base">
                 Selecciona fecha y horario para ver el resumen
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {selectedDate ? (
-                  <div className="flex items-center text-gray-700">
-                    <CalendarDays className="w-4 h-4 mr-2 text-blue-600" />
-                    <span>{selectedDate.toLocaleDateString('es-ES', { 
+                  <div className="flex items-center text-gray-700 text-sm sm:text-base">
+                    <CalendarDays className="w-4 h-4 mr-2 text-blue-600 flex-shrink-0" />
+                    <span className="break-words">{selectedDate.toLocaleDateString('es-ES', { 
                       weekday: 'long', 
                       year: 'numeric', 
                       month: 'long', 
@@ -220,19 +220,19 @@ const Turnos = () => {
                     })}</span>
                   </div>
                 ) : (
-                  <div className="flex items-center text-gray-400">
-                    <CalendarDays className="w-4 h-4 mr-2" />
+                  <div className="flex items-center text-gray-400 text-sm sm:text-base">
+                    <CalendarDays className="w-4 h-4 mr-2 flex-shrink-0" />
                     <span>Fecha no seleccionada</span>
                   </div>
                 )}
                 {selectedTime ? (
-                  <div className="flex items-center text-gray-700">
-                    <Clock className="w-4 h-4 mr-2 text-blue-600" />
+                  <div className="flex items-center text-gray-700 text-sm sm:text-base">
+                    <Clock className="w-4 h-4 mr-2 text-blue-600 flex-shrink-0" />
                     <span>{selectedTime}</span>
                   </div>
                 ) : (
-                  <div className="flex items-center text-gray-400">
-                    <Clock className="w-4 h-4 mr-2" />
+                  <div className="flex items-center text-gray-400 text-sm sm:text-base">
+                    <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
                     <span>Horario no seleccionado</span>
                   </div>
                 )}
@@ -241,22 +241,22 @@ const Turnos = () => {
           </div>
 
           {/* Calendar and Time Selection Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
-              <CalendarDays className="w-5 h-5 mr-2 text-blue-600" />
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6 flex items-center">
+              <CalendarDays className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-600" />
               Selecciona fecha y horario
             </h2>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               {/* Calendar */}
               <div>
-                <h3 className="text-lg font-medium text-gray-700 mb-4">Fecha disponible</h3>
+                <h3 className="text-base sm:text-lg font-medium text-gray-700 mb-3 sm:mb-4">Fecha disponible</h3>
                 <Calendar onDateSelect={handleDateSelect} selectedDate={selectedDate} />
               </div>
 
               {/* Time Slots - Always visible */}
               <div>
-                <h3 className="text-lg font-medium text-gray-700 mb-4">Horarios disponibles</h3>
+                <h3 className="text-base sm:text-lg font-medium text-gray-700 mb-3 sm:mb-4">Horarios disponibles</h3>
                 <TimeSlots 
                   selectedDate={selectedDate} 
                   onTimeSelect={handleTimeSelect}
@@ -268,9 +268,9 @@ const Turnos = () => {
 
           {/* Form Section */}
           {selectedDate && selectedTime && (
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <User className="w-5 h-5 mr-2 text-blue-600" />
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <User className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-600" />
                 Tus datos
               </h2>
               <AppointmentForm onSubmit={handleFormSubmit} />
