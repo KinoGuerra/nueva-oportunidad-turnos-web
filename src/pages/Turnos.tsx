@@ -1,13 +1,14 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ContactMenu } from '../components/ContactMenu';
-import { Calendar } from '../components/Calendar';
-import { TimeSlots } from '../components/TimeSlots';
+import { User } from 'lucide-react';
+import { toast } from 'sonner';
+import { TurnosHeader } from '../components/TurnosHeader';
+import { TurnosHero } from '../components/TurnosHero';
+import { ProgressIndicator } from '../components/ProgressIndicator';
+import { AppointmentSummary } from '../components/AppointmentSummary';
+import { DateTimeSelection } from '../components/DateTimeSelection';
 import { AppointmentForm } from '../components/AppointmentForm';
 import { ConfirmationModal } from '../components/ConfirmationModal';
-import { CalendarDays, Clock, User, ArrowLeft, Sparkles } from 'lucide-react';
-import { toast } from 'sonner';
 
 const Turnos = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -121,150 +122,22 @@ const Turnos = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
-              <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-800">
-                Centro de Belleza
-              </h1>
-            </div>
-            
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Inicio
-              </Link>
-              <Link to="/servicios" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Servicios
-              </Link>
-              <Link to="/turnos" className="text-blue-600 font-medium">
-                Turnos
-              </Link>
-              <Link to="/consultar-turno" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Consultar Turno
-              </Link>
-              <ContactMenu />
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      {/* Breadcrumb */}
-      <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4">
-        <Link 
-          to="/" 
-          className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Volver al inicio
-        </Link>
-      </div>
+      <TurnosHeader />
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 py-4 sm:py-8">
-        {/* Hero Section */}
-        <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4 sm:mb-6">
-            Agenda tu <span className="text-blue-600">Turno</span>
-          </h2>
-          <p className="text-lg sm:text-xl text-gray-600 mb-4 sm:mb-8 px-2">
-            Reserva tu turno de forma fácil y rápida
-          </p>
-        </div>
-
-        {/* Progress Indicator */}
-        <div className="flex items-center justify-center space-x-2 sm:space-x-4 mb-6 sm:mb-8 px-2">
-          <div className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1 sm:py-2 rounded-full transition-all text-sm sm:text-base ${
-            currentStep >= 1 ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
-          }`}>
-            <CalendarDays className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">Fecha</span>
-          </div>
-          <div className={`w-4 sm:w-8 h-0.5 ${currentStep >= 2 ? 'bg-blue-300' : 'bg-gray-200'}`}></div>
-          <div className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1 sm:py-2 rounded-full transition-all text-sm sm:text-base ${
-            currentStep >= 2 ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
-          }`}>
-            <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">Horario</span>
-          </div>
-          <div className={`w-4 sm:w-8 h-0.5 ${currentStep >= 3 ? 'bg-blue-300' : 'bg-gray-200'}`}></div>
-          <div className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1 sm:py-2 rounded-full transition-all text-sm sm:text-base ${
-            currentStep >= 3 ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
-          }`}>
-            <User className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden sm:inline">Datos</span>
-          </div>
-        </div>
+        <TurnosHero />
+        <ProgressIndicator currentStep={currentStep} />
 
         {/* Main Content */}
         <div className="space-y-4 sm:space-y-6">
-          {/* Summary Section - Always visible */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">Resumen del turno</h3>
-            {!selectedDate && !selectedTime ? (
-              <div className="text-gray-500 text-center py-4 text-sm sm:text-base">
-                Selecciona fecha y horario para ver el resumen
-              </div>
-            ) : (
-              <div className="space-y-2 sm:space-y-3">
-                {selectedDate ? (
-                  <div className="flex items-center text-gray-700 text-sm sm:text-base">
-                    <CalendarDays className="w-4 h-4 mr-2 text-blue-600 flex-shrink-0" />
-                    <span className="break-words">{selectedDate.toLocaleDateString('es-ES', { 
-                      weekday: 'long', 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center text-gray-400 text-sm sm:text-base">
-                    <CalendarDays className="w-4 h-4 mr-2 flex-shrink-0" />
-                    <span>Fecha no seleccionada</span>
-                  </div>
-                )}
-                {selectedTime ? (
-                  <div className="flex items-center text-gray-700 text-sm sm:text-base">
-                    <Clock className="w-4 h-4 mr-2 text-blue-600 flex-shrink-0" />
-                    <span>{selectedTime}</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center text-gray-400 text-sm sm:text-base">
-                    <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
-                    <span>Horario no seleccionado</span>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Calendar and Time Selection Section */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6 flex items-center">
-              <CalendarDays className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-600" />
-              Selecciona fecha y horario
-            </h2>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-              {/* Calendar */}
-              <div>
-                <h3 className="text-base sm:text-lg font-medium text-gray-700 mb-3 sm:mb-4">Fecha disponible</h3>
-                <Calendar onDateSelect={handleDateSelect} selectedDate={selectedDate} />
-              </div>
-
-              {/* Time Slots - Always visible */}
-              <div>
-                <h3 className="text-base sm:text-lg font-medium text-gray-700 mb-3 sm:mb-4">Horarios disponibles</h3>
-                <TimeSlots 
-                  selectedDate={selectedDate} 
-                  onTimeSelect={handleTimeSelect}
-                  selectedTime={selectedTime}
-                />
-              </div>
-            </div>
-          </div>
+          <AppointmentSummary selectedDate={selectedDate} selectedTime={selectedTime} />
+          <DateTimeSelection 
+            selectedDate={selectedDate}
+            selectedTime={selectedTime}
+            onDateSelect={handleDateSelect}
+            onTimeSelect={handleTimeSelect}
+          />
 
           {/* Form Section */}
           {selectedDate && selectedTime && (
