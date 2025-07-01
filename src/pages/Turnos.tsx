@@ -52,11 +52,36 @@ const Turnos = () => {
     setIsSubmitting(true);
 
     try {
+      const fechaFormateada = selectedDate.toISOString().split('T')[0];
+
+      // Verificar nuevamente si el horario ya está ocupado antes de crear la reserva
+      console.log('Verificando disponibilidad antes de crear la reserva...');
+      const { data: existingAppointments, error: checkError } = await supabase
+        .from('appointments')
+        .select('id')
+        .eq('fecha', fechaFormateada)
+        .eq('hora', selectedTime);
+
+      if (checkError) {
+        console.error('Error al verificar disponibilidad:', checkError);
+        throw new Error('Error al verificar disponibilidad del horario');
+      }
+
+      if (existingAppointments && existingAppointments.length > 0) {
+        toast.error('Horario no disponible', {
+          description: 'Este horario ya ha sido reservado por otro cliente. Por favor selecciona otro horario.',
+          duration: 5000,
+        });
+        setShowConfirmation(false);
+        setCurrentStep(2); // Volver a la selección de horario
+        return;
+      }
+
       console.log('Enviando datos a Supabase:', {
         nombre: formData.name,
         telefono: formData.phone,
         email: formData.email,
-        fecha: selectedDate.toISOString().split('T')[0],
+        fecha: fechaFormateada,
         hora: selectedTime,
         servicio: 'Predeterminado',
         observaciones: 'Predeterminado'
@@ -69,7 +94,7 @@ const Turnos = () => {
             nombre: formData.name,
             telefono: formData.phone,
             email: formData.email,
-            fecha: selectedDate.toISOString().split('T')[0],
+            fecha: fechaFormateada,
             hora: selectedTime,
             servicio: 'Predeterminado',
             observaciones: 'Predeterminado'
@@ -79,6 +104,18 @@ const Turnos = () => {
 
       if (error) {
         console.error('Error de Supabase:', error);
+        
+        // Manejar errores específicos de duplicados
+        if (error.code === '23505' || error.message.includes('duplicate')) {
+          toast.error('Horario no disponible', {
+            description: 'Este horario ya ha sido reservado. Por favor selecciona otro horario.',
+            duration: 5000,
+          });
+          setShowConfirmation(false);
+          setCurrentStep(2);
+          return;
+        }
+        
         throw error;
       }
 

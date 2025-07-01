@@ -31,7 +31,8 @@ export const useBookedAppointments = (selectedDate: Date | null) => {
         const { data, error } = await supabase
           .from('appointments')
           .select('hora')
-          .eq('fecha', fechaFormateada);
+          .eq('fecha', fechaFormateada)
+          .order('hora', { ascending: true }); // Ordenar por hora para mejor experiencia
 
         if (error) {
           console.error('Error al consultar turnos:', error);
@@ -40,10 +41,12 @@ export const useBookedAppointments = (selectedDate: Date | null) => {
 
         console.log('Turnos recibidos de Supabase:', data);
         
-        // Extraer las horas ocupadas
+        // Extraer las horas ocupadas y asegurar que sean únicas
         const ocupiedTimes = data?.map((appointment) => appointment.hora) || [];
-        setBookedSlots(ocupiedTimes);
-        console.log('Horarios ocupados:', ocupiedTimes);
+        const uniqueOccupiedTimes = [...new Set(ocupiedTimes)]; // Eliminar duplicados
+        
+        setBookedSlots(uniqueOccupiedTimes);
+        console.log('Horarios ocupados (únicos):', uniqueOccupiedTimes);
 
       } catch (error) {
         console.error('Error al consultar turnos:', error);

@@ -12,9 +12,13 @@ export const TurnosHeader = () => {
         <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
+              {/* Logo placeholder - ready for logo incorporation */}
+              <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center">
+                {/* TODO: Replace with actual logo image */}
+                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
+              </div>
               <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-800">
-                Centro de Belleza
+                SER
               </h1>
             </div>
             

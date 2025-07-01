@@ -90,7 +90,7 @@ export const TimeSlots: React.FC<TimeSlotsProps> = ({ selectedDate, onTimeSelect
             <button
               key={time}
               onClick={() => isAvailable && onTimeSelect(time)}
-              disabled={!selectedDate || !isAvailable}
+              disabled={!selectedDate || !isAvailable || isBooked}
               className={`
                 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
                 border-2 hover:scale-105 active:scale-95 relative
