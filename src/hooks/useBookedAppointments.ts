@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface BookedAppointment {
   fecha: string;
@@ -23,32 +24,27 @@ export const useBookedAppointments = (selectedDate: Date | null) => {
       setError(null);
 
       try {
-        const fechaFormateada = selectedDate.toLocaleDateString('es-ES', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        });
+        const fechaFormateada = selectedDate.toISOString().split('T')[0];
 
         console.log('Consultando turnos para la fecha:', fechaFormateada);
 
-        // Hacer GET request para obtener los turnos de la fecha seleccionada
-        const response = await fetch(`https://script.google.com/macros/s/AKfycbwvdGku9fKwC3QwcXR1WeGkblhzltbOj1Mvnlg5srFNnTO5dINOG3p1uoqFaKOXV4edcQ/exec?fecha=${encodeURIComponent(fechaFormateada)}`, {
-          method: 'GET',
-          mode: 'cors'
-        });
+        const { data, error } = await supabase
+          .from('appointments')
+          .select('hora')
+          .eq('fecha', fechaFormateada);
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Turnos recibidos de la API:', data);
-          
-          // Extraer las horas ocupadas
-          const ocupiedTimes = data.map((appointment: BookedAppointment) => appointment.hora);
-          setBookedSlots(ocupiedTimes);
-          console.log('Horarios ocupados:', ocupiedTimes);
-        } else {
-          console.warn('No se pudieron obtener los turnos reservados');
-          setBookedSlots([]);
+        if (error) {
+          console.error('Error al consultar turnos:', error);
+          throw error;
         }
+
+        console.log('Turnos recibidos de Supabase:', data);
+        
+        // Extraer las horas ocupadas
+        const ocupiedTimes = data?.map((appointment) => appointment.hora) || [];
+        setBookedSlots(ocupiedTimes);
+        console.log('Horarios ocupados:', ocupiedTimes);
+
       } catch (error) {
         console.error('Error al consultar turnos:', error);
         setError('Error al consultar disponibilidad');

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { User } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 import { TurnosHeader } from '../components/TurnosHeader';
 import { TurnosHero } from '../components/TurnosHero';
 import { ProgressIndicator } from '../components/ProgressIndicator';
@@ -51,45 +52,42 @@ const Turnos = () => {
     setIsSubmitting(true);
 
     try {
-      // Formatear la fecha para enviar
-      const fechaFormateada = selectedDate.toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-      });
-
-      // Preparar los datos para enviar con valores fijos para servicio y observaciones
-      const dataToSend = {
+      console.log('Enviando datos a Supabase:', {
         nombre: formData.name,
         telefono: formData.phone,
         email: formData.email,
-        fecha: fechaFormateada,
+        fecha: selectedDate.toISOString().split('T')[0],
         hora: selectedTime,
         servicio: 'Predeterminado',
         observaciones: 'Predeterminado'
-      };
-
-      console.log('Enviando datos a Google Apps Script:', dataToSend);
-
-      // Intentar con diferentes configuraciones de fetch
-      const response = await fetch('https://script.google.com/macros/s/AKfycbwvdGku9fKwC3QwcXR1WeGkblhzltbOj1Mvnlg5srFNnTO5dINOG3p1uoqFaKOXV4edcQ/exec', {
-        method: 'POST',
-        mode: 'no-cors', // Cambiar a no-cors para evitar problemas de CORS
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSend)
       });
 
-      console.log('Respuesta recibida:', response);
+      const { data, error } = await supabase
+        .from('appointments')
+        .insert([
+          {
+            nombre: formData.name,
+            telefono: formData.phone,
+            email: formData.email,
+            fecha: selectedDate.toISOString().split('T')[0],
+            hora: selectedTime,
+            servicio: 'Predeterminado',
+            observaciones: 'Predeterminado'
+          }
+        ])
+        .select();
 
-      // Con no-cors, no podemos leer el response, así que asumimos éxito si no hay error
+      if (error) {
+        console.error('Error de Supabase:', error);
+        throw error;
+      }
+
+      console.log('Turno creado exitosamente en Supabase:', data);
+
       toast.success('¡Turno registrado exitosamente!', {
         description: 'Tu turno está en estado PENDIENTE hasta confirmar el depósito de la seña. Te contactaremos con los datos bancarios.',
         duration: 8000,
       });
-
-      console.log('Turno enviado exitosamente:', dataToSend);
       
       // Resetear el formulario
       setShowConfirmation(false);
@@ -99,22 +97,18 @@ const Turnos = () => {
       setFormData({ name: '', phone: '', email: '' });
 
     } catch (error) {
-      console.error('Error detallado al enviar el turno:', error);
-      console.error('Tipo de error:', typeof error);
-      console.error('Mensaje del error:', error instanceof Error ? error.message : 'Error desconocido');
+      console.error('Error al enviar el turno:', error);
       
-      // Mostrar diferentes mensajes según el tipo de error
-      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-        toast.error('Problema de conexión', {
-          description: 'No se pudo conectar con el servidor. Por favor verifica tu conexión a internet e intenta nuevamente.',
-          duration: 7000,
-        });
-      } else {
-        toast.error('Error al enviar el turno', {
-          description: 'Ha ocurrido un error inesperado. Por favor intenta nuevamente o contacta al soporte.',
-          duration: 7000,
-        });
+      let errorMessage = 'Ha ocurrido un error inesperado. Por favor intenta nuevamente.';
+      
+      if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = `Error: ${error.message}`;
       }
+      
+      toast.error('Error al registrar el turno', {
+        description: errorMessage,
+        duration: 7000,
+      });
     } finally {
       setIsSubmitting(false);
     }

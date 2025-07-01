@@ -17,6 +17,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Appointment {
   fecha: string;
@@ -24,6 +25,7 @@ interface Appointment {
   nombre: string;
   email: string;
   servicio?: string;
+  estado?: string;
 }
 
 const ConsultarTurno = () => {
@@ -33,7 +35,7 @@ const ConsultarTurno = () => {
   const [hasSearched, setHasSearched] = useState(false);
 
   const parseDate = (dateStr: string) => {
-    const [day, month, year] = dateStr.split('/');
+    const [year, month, day] = dateStr.split('-');
     return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
   };
 
@@ -42,6 +44,15 @@ const ConsultarTurno = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return appointmentDate < today;
+  };
+
+  const formatDateForDisplay = (dateStr: string) => {
+    const date = parseDate(dateStr);
+    return date.toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
   };
 
   const sortAppointmentsByDate = (appointments: Appointment[]) => {
@@ -84,44 +95,26 @@ const ConsultarTurno = () => {
     try {
       console.log('Consultando turnos para el email:', email);
 
-      const response = await fetch(`https://script.google.com/macros/s/AKfycbwvdGku9fKwC3QwcXR1WeGkblhzltbOj1Mvnlg5srFNnTO5dINOG3p1uoqFaKOXV4edcQ/exec?email=${encodeURIComponent(email)}`, {
-        method: 'GET',
-        mode: 'no-cors'
-      });
+      const { data, error } = await supabase
+        .from('appointments')
+        .select('fecha, hora, nombre, email, servicio, estado')
+        .eq('email', email.trim())
+        .order('fecha', { ascending: true });
 
-      // Como usamos no-cors, simulamos datos para demostración
-      const mockAppointments: Appointment[] = [
-        {
-          fecha: '15/06/2025',
-          hora: '10:00',
-          nombre: 'María García',
-          email: email,
-          servicio: 'Maquillaje Profesional'
-        },
-        {
-          fecha: '20/06/2025',
-          hora: '14:30',
-          nombre: 'María García',
-          email: email,
-          servicio: 'Tratamiento Facial'
-        },
-        {
-          fecha: '10/06/2025',
-          hora: '16:00',
-          nombre: 'María García',
-          email: email,
-          servicio: 'Manicura'
-        },
-        {
-          fecha: '25/06/2025',
-          hora: '11:00',
-          nombre: 'María García',
-          email: email,
-          servicio: 'Corte de Cabello'
-        }
-      ];
+      if (error) {
+        console.error('Error al consultar turnos:', error);
+        throw error;
+      }
 
-      const sortedAppointments = sortAppointmentsByDate(mockAppointments);
+      console.log('Turnos recibidos de Supabase:', data);
+
+      // Convertir el formato de fecha para mostrar
+      const appointmentsWithFormattedDate = data?.map(apt => ({
+        ...apt,
+        fecha: apt.fecha // Mantener formato original para ordenamiento
+      })) || [];
+
+      const sortedAppointments = sortAppointmentsByDate(appointmentsWithFormattedDate);
       setAppointments(sortedAppointments);
       setHasSearched(true);
       
@@ -289,7 +282,7 @@ const ConsultarTurno = () => {
                             <TableCell className="font-medium">
                               <div className="flex items-center">
                                 <Calendar className="w-4 h-4 mr-2 text-gray-500" />
-                                {appointment.fecha}
+                                {formatDateForDisplay(appointment.fecha)}
                                 {isClosest && (
                                   <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
                                     Próximo
@@ -309,10 +302,17 @@ const ConsultarTurno = () => {
                                 className={`px-2 py-1 rounded-full text-xs font-medium ${
                                   isPast 
                                     ? 'bg-gray-200 text-gray-600' 
-                                    : 'bg-green-100 text-green-700'
+                                    : appointment.estado === 'CONFIRMADO'
+                                      ? 'bg-green-100 text-green-700'
+                                      : appointment.estado === 'CANCELADO'
+                                        ? 'bg-red-100 text-red-700'
+                                        : 'bg-orange-100 text-orange-700'
                                 }`}
                               >
-                                {isPast ? 'Realizado' : 'Agendado'}
+                                {isPast 
+                                  ? 'Realizado' 
+                                  : appointment.estado || 'PENDIENTE'
+                                }
                               </span>
                             </TableCell>
                           </TableRow>
