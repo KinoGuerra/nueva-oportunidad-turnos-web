@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Lock, Users, Calendar, CheckCircle, Clock, LogOut, Eye, EyeOff } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -28,6 +29,7 @@ const Admin = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(false);
   const [confirmingIds, setConfirmingIds] = useState<Set<string>>(new Set());
+  const [cancelingIds, setCancelingIds] = useState<Set<string>>(new Set());
 
   // Verificar si ya está autenticado al cargar
   useEffect(() => {
@@ -123,6 +125,44 @@ const Admin = () => {
     }
   };
 
+  const cancelAppointment = async (appointmentId: string) => {
+    setCancelingIds(prev => new Set(prev).add(appointmentId));
+    
+    try {
+      const { error } = await supabase
+        .from('appointments')
+        .update({ estado: 'CANCELADO' })
+        .eq('id', appointmentId);
+
+      if (error) {
+        console.error('Error al cancelar turno:', error);
+        toast.error('Error al cancelar el turno');
+        return;
+      }
+
+      // Actualizar el estado local
+      setAppointments(prev => 
+        prev.map(apt => 
+          apt.id === appointmentId 
+            ? { ...apt, estado: 'CANCELADO' }
+            : apt
+        )
+      );
+
+      toast.success('Turno cancelado exitosamente');
+      
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Error al cancelar el turno');
+    } finally {
+      setCancelingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(appointmentId);
+        return newSet;
+      });
+    }
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('es-AR', { 
@@ -151,6 +191,14 @@ const Admin = () => {
             <CardTitle className="text-2xl text-gray-800">Acceso Administrativo</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="text-center mb-4">
+              <Link 
+                to="/" 
+                className="text-blue-600 hover:text-blue-800 underline text-sm"
+              >
+                ← Volver al inicio
+              </Link>
+            </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Usuario</label>
               <Input
@@ -355,7 +403,7 @@ const Admin = () => {
                       <th className="text-left py-3 px-4 font-medium text-gray-700">Fecha</th>
                       <th className="text-left py-3 px-4 font-medium text-gray-700">Hora</th>
                       <th className="text-left py-3 px-4 font-medium text-gray-700">Servicio</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Estado</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-700">Acción</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -385,10 +433,19 @@ const Admin = () => {
                           {appointment.servicio}
                         </td>
                         <td className="py-3 px-4">
-                          <Badge className="bg-green-100 text-green-800 border-green-300">
-                            <CheckCircle className="w-3 h-3 mr-1" />
-                            Confirmado
-                          </Badge>
+                          <Button
+                            onClick={() => cancelAppointment(appointment.id)}
+                            disabled={cancelingIds.has(appointment.id)}
+                            variant="outline"
+                            className="text-red-600 border-red-300 hover:bg-red-50"
+                            size="sm"
+                          >
+                            {cancelingIds.has(appointment.id) ? (
+                              'Cancelando...'
+                            ) : (
+                              'Cancelar'
+                            )}
+                          </Button>
                         </td>
                       </tr>
                     ))}

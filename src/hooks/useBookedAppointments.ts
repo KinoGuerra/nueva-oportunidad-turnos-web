@@ -32,6 +32,7 @@ export const useBookedAppointments = (selectedDate: Date | null) => {
           .from('appointments')
           .select('hora')
           .eq('fecha', fechaFormateada)
+          .in('estado', ['PENDIENTE', 'CONFIRMADO'])
           .order('hora', { ascending: true }); // Ordenar por hora para mejor experiencia
 
         if (error) {
