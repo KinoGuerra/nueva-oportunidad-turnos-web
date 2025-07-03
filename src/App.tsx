@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Servicios from "./pages/Servicios";
 import Turnos from "./pages/Turnos";
 import ConsultarTurno from "./pages/ConsultarTurno";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ function App() {
             <Route path="/servicios" element={<Servicios />} />
             <Route path="/turnos" element={<Turnos />} />
             <Route path="/consultar-turno" element={<ConsultarTurno />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

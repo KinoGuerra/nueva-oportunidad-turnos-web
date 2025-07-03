@@ -27,6 +27,12 @@ const Home = () => {
               <Link to="/servicios" className="text-gray-700 hover:text-blue-600 transition-colors">
                 Servicios
               </Link>
+              <Link 
+                to="/admin" 
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm"
+              >
+                Acceso
+              </Link>
               <ContactMenu />
             </nav>
           </div>
