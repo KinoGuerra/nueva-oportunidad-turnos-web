@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { User } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { TurnosHeader } from '../components/TurnosHeader';
+import { AppHeader } from '../components/AppHeader';
 import { TurnosHero } from '../components/TurnosHero';
 import { ProgressIndicator } from '../components/ProgressIndicator';
 import { AppointmentSummary } from '../components/AppointmentSummary';
@@ -153,7 +153,7 @@ const Turnos = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <TurnosHeader />
+      <AppHeader />
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 py-4 sm:py-8">

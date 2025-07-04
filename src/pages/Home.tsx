@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ContactMenu } from '../components/ContactMenu';
+import { AppHeader } from '../components/AppHeader';
 import { ImageCarousel } from '../components/ImageCarousel';
 import { ClientTestimonials } from '../components/ClientTestimonials';
 import { Calendar, Search, Sparkles } from 'lucide-react';
@@ -9,35 +9,7 @@ import { Calendar, Search, Sparkles } from 'lucide-react';
 const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="w-8 h-8 text-blue-600" />
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-                Centro de Belleza
-              </h1>
-            </div>
-            
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Inicio
-              </Link>
-              <Link to="/servicios" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Servicios
-              </Link>
-              <Link 
-                to="/admin" 
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm"
-              >
-                Acceso
-              </Link>
-              <ContactMenu />
-            </nav>
-          </div>
-        </div>
-      </header>
+      <AppHeader showBreadcrumb={false} />
 
       {/* Hero Section */}
       <section className="py-16 px-4">
@@ -130,7 +102,7 @@ const Home = () => {
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Sparkles className="w-6 h-6 text-blue-400" />
-            <h3 className="text-xl font-semibold">Centro de Belleza</h3>
+            <h3 className="text-xl font-semibold">SER - Centro de Belleza</h3>
           </div>
           <p className="text-gray-400 mb-8">
             Tu lugar de confianza para cuidar tu belleza y bienestar

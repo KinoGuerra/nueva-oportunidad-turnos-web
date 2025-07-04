@@ -1,15 +1,13 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ContactMenu } from '../components/ContactMenu';
+import { AppHeader } from '../components/AppHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { 
-  Sparkles, 
   Search, 
-  ArrowLeft, 
   Calendar, 
   Clock, 
   User,
@@ -136,46 +134,7 @@ const ConsultarTurno = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="w-8 h-8 text-blue-600" />
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-                Centro de Belleza
-              </h1>
-            </div>
-            
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Inicio
-              </Link>
-              <Link to="/servicios" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Servicios
-              </Link>
-              <Link to="/turnos" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Turnos
-              </Link>
-              <Link to="/consultar-turno" className="text-blue-600 font-medium">
-                Consultar Turno
-              </Link>
-              <ContactMenu />
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      {/* Breadcrumb */}
-      <div className="max-w-6xl mx-auto px-4 py-4">
-        <Link 
-          to="/" 
-          className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Volver al inicio
-        </Link>
-      </div>
+      <AppHeader />
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 py-8">

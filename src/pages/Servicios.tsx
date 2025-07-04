@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { AppHeader } from '../components/AppHeader';
 import { ContactMenu } from '../components/ContactMenu';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,8 +14,7 @@ import {
   Scissors, 
   Droplets, 
   Sun,
-  Calendar,
-  ArrowLeft
+  Calendar
 } from 'lucide-react';
 
 const Servicios = () => {
@@ -71,40 +71,7 @@ const Servicios = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="w-8 h-8 text-blue-600" />
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-                Centro de Belleza
-              </h1>
-            </div>
-            
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">
-                Inicio
-              </Link>
-              <Link to="/servicios" className="text-blue-600 font-semibold">
-                Servicios
-              </Link>
-              <ContactMenu />
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      {/* Breadcrumb */}
-      <div className="max-w-6xl mx-auto px-4 py-4">
-        <Link 
-          to="/" 
-          className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Volver al inicio
-        </Link>
-      </div>
+      <AppHeader />
 
       {/* Hero Section */}
       <section className="py-12 px-4">
@@ -198,7 +165,7 @@ const Servicios = () => {
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Sparkles className="w-6 h-6 text-blue-400" />
-            <h3 className="text-xl font-semibold">Centro de Belleza</h3>
+            <h3 className="text-xl font-semibold">SER - Centro de Belleza</h3>
           </div>
           <p className="text-gray-400 mb-8">
             Tu lugar de confianza para cuidar tu belleza y bienestar
