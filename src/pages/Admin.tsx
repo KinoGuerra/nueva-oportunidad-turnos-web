@@ -63,9 +63,12 @@ const Admin = () => {
   const fetchAppointments = async () => {
     setLoading(true);
     try {
+      const today = new Date().toISOString().split('T')[0]; // Fecha actual en formato YYYY-MM-DD
+      
       const { data, error } = await supabase
         .from('appointments')
         .select('*')
+        .gte('fecha', today) // Solo turnos de hoy en adelante
         .order('fecha', { ascending: true })
         .order('hora', { ascending: true });
 
