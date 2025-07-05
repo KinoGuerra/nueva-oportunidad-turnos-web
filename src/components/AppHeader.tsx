@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ContactMenu } from './ContactMenu';
-import { Sparkles, ArrowLeft } from 'lucide-react';
+import { AdminLoginDialog } from './AdminLoginDialog';
+import { Button } from '@/components/ui/button';
+import { Sparkles } from 'lucide-react';
 
 interface AppHeaderProps {
   showBreadcrumb?: boolean;
@@ -84,12 +86,11 @@ export const AppHeader = ({ showBreadcrumb = true }: AppHeaderProps) => {
                 Consultar Turno
               </Link>
               {location.pathname !== '/admin' && (
-                <Link 
-                  to="/admin" 
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm"
-                >
-                  Acceso
-                </Link>
+                <AdminLoginDialog>
+                  <Button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm">
+                    Acceso
+                  </Button>
+                </AdminLoginDialog>
               )}
               <ContactMenu />
             </nav>
@@ -97,18 +98,6 @@ export const AppHeader = ({ showBreadcrumb = true }: AppHeaderProps) => {
         </div>
       </header>
 
-      {/* Breadcrumb */}
-      {showBreadcrumb && location.pathname !== '/' && (
-        <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4">
-          <Link 
-            to="/" 
-            className="inline-flex items-center text-gray-600 hover:text-blue-600 transition-colors text-sm sm:text-base"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Volver al inicio
-          </Link>
-        </div>
-      )}
     </>
   );
 };

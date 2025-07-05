@@ -32,8 +32,8 @@ export const useBookedAppointments = (selectedDate: Date | null) => {
           .from('appointments')
           .select('hora')
           .eq('fecha', fechaFormateada)
-          .in('estado', ['PENDIENTE', 'CONFIRMADO'])
-          .order('hora', { ascending: true }); // Ordenar por hora para mejor experiencia
+          .in('estado', ['PENDIENTE', 'CONFIRMADO', 'COMPLETADO']) // Todos los estados que ocupan el horario
+          .order('hora', { ascending: true });
 
         if (error) {
           console.error('Error al consultar turnos:', error);
@@ -44,10 +44,10 @@ export const useBookedAppointments = (selectedDate: Date | null) => {
         
         // Extraer las horas ocupadas y asegurar que sean únicas
         const ocupiedTimes = data?.map((appointment) => appointment.hora) || [];
-        const uniqueOccupiedTimes = [...new Set(ocupiedTimes)]; // Eliminar duplicados
+        const uniqueOccupiedTimes = [...new Set(ocupiedTimes)];
         
-        setBookedSlots(uniqueOccupiedTimes);
         console.log('Horarios ocupados (únicos):', uniqueOccupiedTimes);
+        setBookedSlots(uniqueOccupiedTimes);
 
       } catch (error) {
         console.error('Error al consultar turnos:', error);

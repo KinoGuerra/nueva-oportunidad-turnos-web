@@ -52,9 +52,17 @@ export const TimeSlots: React.FC<TimeSlotsProps> = ({ selectedDate, onTimeSelect
     // Combinar horarios no disponibles por reglas de negocio y horarios ya reservados
     const allUnavailableSlots = [...unavailableSlots, ...bookedSlots];
     
-    availableSlots = isWeekend 
-      ? unavailableSlots.filter(slot => !bookedSlots.includes(slot))
-      : timeSlots.filter(slot => !allUnavailableSlots.includes(slot));
+    if (isWeekend) {
+      // Para fines de semana, usar solo horarios de fin de semana que no estén reservados
+      const weekendSlots = timeSlots.filter(slot => {
+        const hour = parseInt(slot.split(':')[0]);
+        return hour >= 10 && hour <= 16;
+      }).slice(0, 6); // Solo 6 horarios disponibles
+      availableSlots = weekendSlots.filter(slot => !bookedSlots.includes(slot));
+    } else {
+      // Para días de semana, excluir todos los horarios no disponibles
+      availableSlots = timeSlots.filter(slot => !allUnavailableSlots.includes(slot));
+    }
   }
 
   return (
