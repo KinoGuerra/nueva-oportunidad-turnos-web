@@ -30,6 +30,7 @@ const Admin = () => {
   const [loading, setLoading] = useState(false);
   const [confirmingIds, setConfirmingIds] = useState<Set<string>>(new Set());
   const [cancelingIds, setCancelingIds] = useState<Set<string>>(new Set());
+  const [completingIds, setCompletingIds] = useState<Set<string>>(new Set());
 
   // Verificar si ya está autenticado al cargar
   useEffect(() => {
@@ -166,6 +167,44 @@ const Admin = () => {
     }
   };
 
+  const completeAppointment = async (appointmentId: string) => {
+    setCompletingIds(prev => new Set(prev).add(appointmentId));
+    
+    try {
+      const { error } = await supabase
+        .from('appointments')
+        .update({ estado: 'COMPLETADO' })
+        .eq('id', appointmentId);
+
+      if (error) {
+        console.error('Error al completar turno:', error);
+        toast.error('Error al completar el turno');
+        return;
+      }
+
+      // Actualizar el estado local
+      setAppointments(prev => 
+        prev.map(apt => 
+          apt.id === appointmentId 
+            ? { ...apt, estado: 'COMPLETADO' }
+            : apt
+        )
+      );
+
+      toast.success('Turno marcado como completado');
+      
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Error al completar el turno');
+    } finally {
+      setCompletingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(appointmentId);
+        return newSet;
+      });
+    }
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('es-AR', { 
@@ -194,14 +233,6 @@ const Admin = () => {
             <CardTitle className="text-2xl text-gray-800">Acceso Administrativo</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="text-center mb-4">
-              <Link 
-                to="/" 
-                className="text-blue-600 hover:text-blue-800 underline text-sm"
-              >
-                ← Volver al inicio
-              </Link>
-            </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Usuario</label>
               <Input
@@ -360,21 +391,36 @@ const Admin = () => {
                           {appointment.servicio}
                         </td>
                         <td className="py-3 px-4">
-                          <Button
-                            onClick={() => confirmAppointment(appointment.id)}
-                            disabled={confirmingIds.has(appointment.id)}
-                            className="bg-green-600 hover:bg-green-700 text-white"
-                            size="sm"
-                          >
-                            {confirmingIds.has(appointment.id) ? (
-                              'Confirmando...'
-                            ) : (
-                              <>
-                                <CheckCircle className="w-4 h-4 mr-1" />
-                                Confirmar
-                              </>
-                            )}
-                          </Button>
+                          <div className="flex space-x-2">
+                            <Button
+                              onClick={() => confirmAppointment(appointment.id)}
+                              disabled={confirmingIds.has(appointment.id)}
+                              className="bg-green-600 hover:bg-green-700 text-white"
+                              size="sm"
+                            >
+                              {confirmingIds.has(appointment.id) ? (
+                                'Confirmando...'
+                              ) : (
+                                <>
+                                  <CheckCircle className="w-4 h-4 mr-1" />
+                                  Confirmar
+                                </>
+                              )}
+                            </Button>
+                            <Button
+                              onClick={() => cancelAppointment(appointment.id)}
+                              disabled={cancelingIds.has(appointment.id)}
+                              variant="outline"
+                              className="text-red-600 border-red-300 hover:bg-red-50"
+                              size="sm"
+                            >
+                              {cancelingIds.has(appointment.id) ? (
+                                'Cancelando...'
+                              ) : (
+                                'Cancelar'
+                              )}
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -436,19 +482,36 @@ const Admin = () => {
                           {appointment.servicio}
                         </td>
                         <td className="py-3 px-4">
-                          <Button
-                            onClick={() => cancelAppointment(appointment.id)}
-                            disabled={cancelingIds.has(appointment.id)}
-                            variant="outline"
-                            className="text-red-600 border-red-300 hover:bg-red-50"
-                            size="sm"
-                          >
-                            {cancelingIds.has(appointment.id) ? (
-                              'Cancelando...'
-                            ) : (
-                              'Cancelar'
-                            )}
-                          </Button>
+                          <div className="flex space-x-2">
+                            <Button
+                              onClick={() => completeAppointment(appointment.id)}
+                              disabled={completingIds.has(appointment.id)}
+                              className="bg-blue-600 hover:bg-blue-700 text-white"
+                              size="sm"
+                            >
+                              {completingIds.has(appointment.id) ? (
+                                'Finalizando...'
+                              ) : (
+                                <>
+                                  <CheckCircle className="w-4 h-4 mr-1" />
+                                  Finalizado
+                                </>
+                              )}
+                            </Button>
+                            <Button
+                              onClick={() => cancelAppointment(appointment.id)}
+                              disabled={cancelingIds.has(appointment.id)}
+                              variant="outline"
+                              className="text-red-600 border-red-300 hover:bg-red-50"
+                              size="sm"
+                            >
+                              {cancelingIds.has(appointment.id) ? (
+                                'Cancelando...'
+                              ) : (
+                                'Cancelar'
+                              )}
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}
