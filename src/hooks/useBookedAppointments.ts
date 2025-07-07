@@ -32,7 +32,7 @@ export const useBookedAppointments = (selectedDate: Date | null) => {
           .from('appointments')
           .select('hora')
           .eq('fecha', fechaFormateada)
-          .in('estado', ['PENDIENTE', 'CONFIRMADO', 'COMPLETADO']) // Todos los estados que ocupan el horario
+          .in('estado', ['PENDIENTE', 'CONFIRMADO', 'REALIZADO']) // Todos los estados que ocupan el horario
           .order('hora', { ascending: true });
 
         if (error) {

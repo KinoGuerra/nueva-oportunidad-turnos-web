@@ -157,7 +157,7 @@ const Admin = () => {
     try {
       const { error } = await supabase
         .from('appointments')
-        .update({ estado: 'COMPLETADO' })
+        .update({ estado: 'REALIZADO' })
         .eq('id', appointmentId);
 
       if (error) {
@@ -170,12 +170,12 @@ const Admin = () => {
       setAppointments(prev => 
         prev.map(apt => 
           apt.id === appointmentId 
-            ? { ...apt, estado: 'COMPLETADO' }
+            ? { ...apt, estado: 'REALIZADO' }
             : apt
         )
       );
 
-      toast.success('Turno marcado como completado');
+      toast.success('Turno marcado como realizado');
       
     } catch (error) {
       console.error('Error:', error);
