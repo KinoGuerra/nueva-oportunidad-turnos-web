@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Lock, Users, Calendar, CheckCircle, Clock, LogOut } from 'lucide-react';
+import { Lock, Users, Calendar, CheckCircle, Clock, LogOut, BarChart3, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { InteractiveMenu, InteractiveMenuItem } from '@/components/ui/modern-mobile-menu';
 
 interface Appointment {
   id: string;
@@ -26,6 +27,7 @@ const Admin = () => {
   const [confirmingIds, setConfirmingIds] = useState<Set<string>>(new Set());
   const [cancelingIds, setCancelingIds] = useState<Set<string>>(new Set());
   const [completingIds, setCompletingIds] = useState<Set<string>>(new Set());
+  const [currentView, setCurrentView] = useState('turnos');
 
   // Verificar si ya está autenticado al cargar
   useEffect(() => {
@@ -42,6 +44,25 @@ const Admin = () => {
     localStorage.removeItem('admin_authenticated');
     toast.success('Sesión cerrada correctamente');
     window.location.href = '/';
+  };
+
+  const menuItems: InteractiveMenuItem[] = [
+    { label: 'Administrar Turnos', icon: Calendar },
+    { label: 'Reportería', icon: BarChart3 },
+    { label: 'Servicios', icon: Settings },
+    { label: 'Cerrar Sesión', icon: LogOut },
+  ];
+
+  const handleMenuClick = (index: number, item: InteractiveMenuItem) => {
+    if (item.label === 'Cerrar Sesión') {
+      handleLogout();
+    } else if (item.label === 'Administrar Turnos') {
+      setCurrentView('turnos');
+    } else if (item.label === 'Reportería') {
+      setCurrentView('reporteria');
+    } else if (item.label === 'Servicios') {
+      setCurrentView('servicios');
+    }
   };
 
 
@@ -216,240 +237,275 @@ const Admin = () => {
               <Users className="w-8 h-8 text-blue-600" />
               <h1 className="text-2xl font-bold text-gray-800">Panel de Administración</h1>
             </div>
-            <Button 
-              onClick={handleLogout}
-              variant="outline"
-              className="text-gray-600 hover:text-gray-800"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Cerrar Sesión
-            </Button>
+          </div>
+          <div className="mt-4 flex justify-center">
+            <InteractiveMenu 
+              items={menuItems}
+              onItemClick={handleMenuClick}
+              accentColor="hsl(222.2, 47.4%, 11.2%)"
+            />
           </div>
         </div>
       </header>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <Clock className="w-12 h-12 text-yellow-500 mr-4" />
-              <div>
-                <p className="text-sm text-gray-600">Turnos Pendientes</p>
-                <p className="text-2xl font-bold text-gray-800">{pendingAppointments.length}</p>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <CheckCircle className="w-12 h-12 text-green-500 mr-4" />
-              <div>
-                <p className="text-sm text-gray-600">Turnos Confirmados</p>
-                <p className="text-2xl font-bold text-gray-800">{confirmedAppointments.length}</p>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="flex items-center p-6">
-              <Calendar className="w-12 h-12 text-blue-500 mr-4" />
-              <div>
-                <p className="text-sm text-gray-600">Total de Turnos</p>
-                <p className="text-2xl font-bold text-gray-800">{appointments.length}</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {loading && (
-          <div className="text-center py-8">
-            <p className="text-gray-600">Cargando turnos...</p>
-          </div>
+        {currentView === 'turnos' && (
+          <>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <Card>
+                <CardContent className="flex items-center p-6">
+                  <Clock className="w-12 h-12 text-yellow-500 mr-4" />
+                  <div>
+                    <p className="text-sm text-gray-600">Turnos Pendientes</p>
+                    <p className="text-2xl font-bold text-gray-800">{pendingAppointments.length}</p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="flex items-center p-6">
+                  <CheckCircle className="w-12 h-12 text-green-500 mr-4" />
+                  <div>
+                    <p className="text-sm text-gray-600">Turnos Confirmados</p>
+                    <p className="text-2xl font-bold text-gray-800">{confirmedAppointments.length}</p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="flex items-center p-6">
+                  <Calendar className="w-12 h-12 text-blue-500 mr-4" />
+                  <div>
+                    <p className="text-sm text-gray-600">Total de Turnos</p>
+                    <p className="text-2xl font-bold text-gray-800">{appointments.length}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </>
         )}
 
-        {/* Turnos Pendientes */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center text-yellow-700">
-              <Clock className="w-5 h-5 mr-2" />
-              Turnos Pendientes ({pendingAppointments.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {pendingAppointments.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No hay turnos pendientes</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Cliente</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Contacto</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Fecha</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Hora</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Servicio</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {pendingAppointments.map((appointment) => (
-                      <tr key={appointment.id} className="border-b hover:bg-gray-50">
-                        <td className="py-3 px-4">
-                          <div>
-                            <p className="font-medium text-gray-800">{appointment.nombre}</p>
-                            <Badge variant="outline" className="text-yellow-700 border-yellow-300">
-                              Pendiente
-                            </Badge>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4">
-                          <div className="text-sm text-gray-600">
-                            <p>{appointment.email}</p>
-                            <p>{appointment.telefono}</p>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4 text-sm text-gray-600">
-                          {formatDate(appointment.fecha)}
-                        </td>
-                        <td className="py-3 px-4 text-sm text-gray-600">
-                          {formatTime(appointment.hora)}
-                        </td>
-                        <td className="py-3 px-4 text-sm text-gray-600">
-                          {appointment.servicio}
-                        </td>
-                        <td className="py-3 px-4">
-                          <div className="flex space-x-2">
-                            <Button
-                              onClick={() => confirmAppointment(appointment.id)}
-                              disabled={confirmingIds.has(appointment.id)}
-                              className="bg-green-600 hover:bg-green-700 text-white"
-                              size="sm"
-                            >
-                              {confirmingIds.has(appointment.id) ? (
-                                'Confirmando...'
-                              ) : (
-                                <>
-                                  <CheckCircle className="w-4 h-4 mr-1" />
-                                  Confirmar
-                                </>
-                              )}
-                            </Button>
-                            <Button
-                              onClick={() => cancelAppointment(appointment.id)}
-                              disabled={cancelingIds.has(appointment.id)}
-                              variant="outline"
-                              className="text-red-600 border-red-300 hover:bg-red-50"
-                              size="sm"
-                            >
-                              {cancelingIds.has(appointment.id) ? (
-                                'Cancelando...'
-                              ) : (
-                                'Cancelar'
-                              )}
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+        {currentView === 'turnos' && (
+          <>
+            {loading && (
+              <div className="text-center py-8">
+                <p className="text-gray-600">Cargando turnos...</p>
               </div>
             )}
-          </CardContent>
-        </Card>
 
-        {/* Turnos Confirmados */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center text-green-700">
-              <CheckCircle className="w-5 h-5 mr-2" />
-              Turnos Confirmados ({confirmedAppointments.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {confirmedAppointments.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No hay turnos confirmados</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Cliente</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Contacto</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Fecha</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Hora</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Servicio</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {confirmedAppointments.map((appointment) => (
-                      <tr key={appointment.id} className="border-b hover:bg-gray-50">
-                        <td className="py-3 px-4">
-                          <div>
-                            <p className="font-medium text-gray-800">{appointment.nombre}</p>
-                            <Badge variant="outline" className="text-green-700 border-green-300 bg-green-50">
-                              Confirmado
-                            </Badge>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4">
-                          <div className="text-sm text-gray-600">
-                            <p>{appointment.email}</p>
-                            <p>{appointment.telefono}</p>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4 text-sm text-gray-600">
-                          {formatDate(appointment.fecha)}
-                        </td>
-                        <td className="py-3 px-4 text-sm text-gray-600">
-                          {formatTime(appointment.hora)}
-                        </td>
-                        <td className="py-3 px-4 text-sm text-gray-600">
-                          {appointment.servicio}
-                        </td>
-                        <td className="py-3 px-4">
-                          <div className="flex space-x-2">
-                            <Button
-                              onClick={() => completeAppointment(appointment.id)}
-                              disabled={completingIds.has(appointment.id)}
-                              className="bg-blue-600 hover:bg-blue-700 text-white"
-                              size="sm"
-                            >
-                              {completingIds.has(appointment.id) ? (
-                                'Finalizando...'
-                              ) : (
-                                <>
-                                  <CheckCircle className="w-4 h-4 mr-1" />
-                                  Finalizado
-                                </>
-                              )}
-                            </Button>
-                            <Button
-                              onClick={() => cancelAppointment(appointment.id)}
-                              disabled={cancelingIds.has(appointment.id)}
-                              variant="outline"
-                              className="text-red-600 border-red-300 hover:bg-red-50"
-                              size="sm"
-                            >
-                              {cancelingIds.has(appointment.id) ? (
-                                'Cancelando...'
-                              ) : (
-                                'Cancelar'
-                              )}
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+            {/* Turnos Pendientes */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center text-yellow-700">
+                  <Clock className="w-5 h-5 mr-2" />
+                  Turnos Pendientes ({pendingAppointments.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {pendingAppointments.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">No hay turnos pendientes</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Cliente</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Contacto</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Fecha</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Hora</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Servicio</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Acción</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {pendingAppointments.map((appointment) => (
+                          <tr key={appointment.id} className="border-b hover:bg-gray-50">
+                            <td className="py-3 px-4">
+                              <div>
+                                <p className="font-medium text-gray-800">{appointment.nombre}</p>
+                                <Badge variant="outline" className="text-yellow-700 border-yellow-300">
+                                  Pendiente
+                                </Badge>
+                              </div>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="text-sm text-gray-600">
+                                <p>{appointment.email}</p>
+                                <p>{appointment.telefono}</p>
+                              </div>
+                            </td>
+                            <td className="py-3 px-4 text-sm text-gray-600">
+                              {formatDate(appointment.fecha)}
+                            </td>
+                            <td className="py-3 px-4 text-sm text-gray-600">
+                              {formatTime(appointment.hora)}
+                            </td>
+                            <td className="py-3 px-4 text-sm text-gray-600">
+                              {appointment.servicio}
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="flex space-x-2">
+                                <Button
+                                  onClick={() => confirmAppointment(appointment.id)}
+                                  disabled={confirmingIds.has(appointment.id)}
+                                  className="bg-green-600 hover:bg-green-700 text-white"
+                                  size="sm"
+                                >
+                                  {confirmingIds.has(appointment.id) ? (
+                                    'Confirmando...'
+                                  ) : (
+                                    <>
+                                      <CheckCircle className="w-4 h-4 mr-1" />
+                                      Confirmar
+                                    </>
+                                  )}
+                                </Button>
+                                <Button
+                                  onClick={() => cancelAppointment(appointment.id)}
+                                  disabled={cancelingIds.has(appointment.id)}
+                                  variant="outline"
+                                  className="text-red-600 border-red-300 hover:bg-red-50"
+                                  size="sm"
+                                >
+                                  {cancelingIds.has(appointment.id) ? (
+                                    'Cancelando...'
+                                  ) : (
+                                    'Cancelar'
+                                  )}
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Turnos Confirmados */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center text-green-700">
+                  <CheckCircle className="w-5 h-5 mr-2" />
+                  Turnos Confirmados ({confirmedAppointments.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {confirmedAppointments.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">No hay turnos confirmados</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Cliente</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Contacto</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Fecha</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Hora</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Servicio</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-700">Acción</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {confirmedAppointments.map((appointment) => (
+                          <tr key={appointment.id} className="border-b hover:bg-gray-50">
+                            <td className="py-3 px-4">
+                              <div>
+                                <p className="font-medium text-gray-800">{appointment.nombre}</p>
+                                <Badge variant="outline" className="text-green-700 border-green-300 bg-green-50">
+                                  Confirmado
+                                </Badge>
+                              </div>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="text-sm text-gray-600">
+                                <p>{appointment.email}</p>
+                                <p>{appointment.telefono}</p>
+                              </div>
+                            </td>
+                            <td className="py-3 px-4 text-sm text-gray-600">
+                              {formatDate(appointment.fecha)}
+                            </td>
+                            <td className="py-3 px-4 text-sm text-gray-600">
+                              {formatTime(appointment.hora)}
+                            </td>
+                            <td className="py-3 px-4 text-sm text-gray-600">
+                              {appointment.servicio}
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="flex space-x-2">
+                                <Button
+                                  onClick={() => completeAppointment(appointment.id)}
+                                  disabled={completingIds.has(appointment.id)}
+                                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                                  size="sm"
+                                >
+                                  {completingIds.has(appointment.id) ? (
+                                    'Finalizando...'
+                                  ) : (
+                                    <>
+                                      <CheckCircle className="w-4 h-4 mr-1" />
+                                      Finalizado
+                                    </>
+                                  )}
+                                </Button>
+                                <Button
+                                  onClick={() => cancelAppointment(appointment.id)}
+                                  disabled={cancelingIds.has(appointment.id)}
+                                  variant="outline"
+                                  className="text-red-600 border-red-300 hover:bg-red-50"
+                                  size="sm"
+                                >
+                                  {cancelingIds.has(appointment.id) ? (
+                                    'Cancelando...'
+                                  ) : (
+                                    'Cancelar'
+                                  )}
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </>
+        )}
+
+        {currentView === 'reporteria' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center text-blue-700">
+                <BarChart3 className="w-5 h-5 mr-2" />
+                Reportería
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-500 text-center py-8">Próximamente: Reportes de turnos por día, semana, mes y tipo de servicio</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {currentView === 'servicios' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center text-purple-700">
+                <Settings className="w-5 h-5 mr-2" />
+                Gestión de Servicios
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-500 text-center py-8">Próximamente: Administrar servicios, descripciones, duración y precios</p>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
