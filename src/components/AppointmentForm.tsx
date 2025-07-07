@@ -33,8 +33,8 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit }) =>
 
     if (!formData.phone.trim()) {
       newErrors.phone = 'El teléfono es requerido';
-    } else if (!/^\d{8,15}$/.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'Ingresa un teléfono válido (8-15 dígitos)';
+    } else if (!/^(11|[2368][0-9])\d{7}$/.test(formData.phone.replace(/\s/g, ''))) {
+      newErrors.phone = 'Ingresa teléfono celular sin 15, con código de área sin el 0 (ej: 1123456789)';
     }
 
     if (!formData.email.trim()) {
@@ -65,13 +65,14 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit }) =>
     // Remover todos los caracteres no numéricos
     const numbers = value.replace(/\D/g, '');
     
-    // Limitar a 15 dígitos
-    const truncated = numbers.slice(0, 15);
+    // Limitar a 10 dígitos para formato argentino
+    const truncated = numbers.slice(0, 10);
     
-    // Formatear con espacios cada 3-4 dígitos
-    if (truncated.length <= 3) return truncated;
-    if (truncated.length <= 7) return `${truncated.slice(0, 3)} ${truncated.slice(3)}`;
-    return `${truncated.slice(0, 3)} ${truncated.slice(3, 6)} ${truncated.slice(6)}`;
+    // Formatear específicamente para números argentinos (código área + número)
+    if (truncated.length <= 2) return truncated;
+    if (truncated.length <= 4) return `${truncated.slice(0, 2)} ${truncated.slice(2)}`;
+    if (truncated.length <= 6) return `${truncated.slice(0, 2)} ${truncated.slice(2, 4)} ${truncated.slice(4)}`;
+    return `${truncated.slice(0, 2)} ${truncated.slice(2, 6)} ${truncated.slice(6)}`;
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,7 +129,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit }) =>
           type="tel"
           value={formData.phone}
           onChange={handlePhoneChange}
-          placeholder="123 456 789"
+          placeholder="11 2345 6789"
           className={`
             w-full px-4 py-3 rounded-xl border-2 transition-all duration-200
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20

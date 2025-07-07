@@ -83,7 +83,8 @@ export const AccordionAppointmentBooking = () => {
             fecha: fechaFormateada,
             hora: selectedTime,
             servicio: 'Predeterminado',
-            observaciones: 'Predeterminado'
+            observaciones: 'Predeterminado',
+            estado: 'CONFIRMADO'
           }
         ])
         .select();
@@ -101,8 +102,8 @@ export const AccordionAppointmentBooking = () => {
         throw error;
       }
 
-      toast.success('¡Turno registrado exitosamente!', {
-        description: 'Tu turno está PENDIENTE hasta confirmar el depósito de la seña. Te contactaremos pronto.',
+      toast.success('¡Turno confirmado exitosamente!', {
+        description: 'Tu turno ha sido confirmado y guardado en el sistema. Te contactaremos pronto.',
         duration: 8000,
       });
       
